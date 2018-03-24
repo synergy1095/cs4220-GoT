@@ -19,8 +19,8 @@ exports.getByURL = (url) => {
 }
 
 exports.search = (type, page = 1, pageSize = 10, queryType = null, query = null) => {
-    return _fetch(query ? type + '?' + 'page=' + page + '&pageSize=' + pageSize + '&' + queryType + '=' + query 
-        : type + '?' + 'page=' + page + '&pageSize=' + pageSize)
+    return _fetch(query ? `${type}?page=${page}&pageSize=${pageSize}&${queryType}=${query}` 
+        : `${type}?page=${page}&pageSize=${pageSize}`)
 }
 
 exports.getQueryTypes = (type) => {
@@ -28,7 +28,7 @@ exports.getQueryTypes = (type) => {
 }
 
 exports.getByID = (type, id) => {
-    return _fetch(type + '/' + id)
+    return _fetch(`${type}/${id}`)
 }
 
 exports.getTypes = () => {

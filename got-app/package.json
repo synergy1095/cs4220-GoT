@@ -12,7 +12,7 @@
     "thrones",
     "got"
   ],
-  "author": "Daniel Xu, Jonathan Song, Henry Ho",
+  "author": "Daniel Xu, Jonathan Song, Henry Ho, Justin Sarenas",
   "license": "MIT",
   "dependencies": {
     "superagent": "^3.8.2"

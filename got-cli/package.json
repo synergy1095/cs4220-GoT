@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "Daniel Xu, Jonathan Song, Henry Ho",
+  "author": "Daniel Xu, Jonathan Song, Henry Ho, Justin Sarenas",
   "license": "MIT",
   "dependencies": {
     "got-app": "file:../got-app",
