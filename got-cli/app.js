@@ -7,8 +7,7 @@ const search = (query) => {
         query = query.join(' ')
         api.search('characters', 10, 'name', query)
         .then(result => {
-            if(result.length)
-                print(result)
+            print(result)
         })
     }
     else{
