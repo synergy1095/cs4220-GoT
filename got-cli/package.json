@@ -1,0 +1,16 @@
+{
+  "name": "got-cli",
+  "version": "1.0.0",
+  "description": "CLI for GOT API ",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Daniel Xu, Jonathan Song, Henry Ho",
+  "license": "MIT",
+  "dependencies": {
+    "got-app": "file:../got-app",
+    "inquirer": "^5.1.0",
+    "yargs": "^11.0.0"
+  }
+}

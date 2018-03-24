@@ -1,0 +1,20 @@
+{
+  "name": "got-app",
+  "version": "1.0.0",
+  "description": "Search for your favorite Game of Thrones episodes, books, and character profile using this simple and easy to use cli!",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "game",
+    "of",
+    "thrones",
+    "got"
+  ],
+  "author": "Daniel Xu, Jonathan Song, Henry Ho",
+  "license": "MIT",
+  "dependencies": {
+    "superagent": "^3.8.2"
+  }
+}
