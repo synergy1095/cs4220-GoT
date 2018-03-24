@@ -2,59 +2,69 @@ const
     api = require('got-app'),
     inquirer = require('inquirer')
 
-const search = () => {
-    pageSizePrompt().then((answers) => {
-        const{pageSizePrompt = '10'} = answers
+const search = (query) => {
+    if(query.length){
+        query = query.join(' ')
+        api.search('characters', 10, 'name', query)
+        .then(result => {
+            if(result.length)
+                print(result)
+        })
+    }
+    else{
+        pageSizePrompt().then((answers) => {
+            const{pageSizePrompt = '10'} = answers
 
-        searchPrompt().then((answers) => {
-            const{searchTypePrompt = 'characters'} = answers
-            // console.log(searchTypePrompt)
-            queryTypePrompt(searchTypePrompt).then((answers) => {
-                const{searchQueryTypePrompt = 'name'} = answers
+            searchPrompt().then((answers) => {
+                const{searchTypePrompt = 'characters'} = answers
+                // console.log(searchTypePrompt)
+                queryTypePrompt(searchTypePrompt).then((answers) => {
+                    const{searchQueryTypePrompt = 'name'} = answers
 
-                // console.log(searchTypePrompt + ' ' + searchQueryTypePrompt)
-                if(searchQueryTypePrompt === 'show all'){
-                    api.search(searchTypePrompt, pageSizePrompt)
-                    .then(result => {
-                        print(result)
-                    })
-                }
-                else if(searchQueryTypePrompt === 'male'){
-                    api.search(searchTypePrompt, pageSizePrompt, 'gender', 'male')
-                    .then(result => {
-                        print(result)
-                    })
-                }
-                else if(searchQueryTypePrompt === 'female'){
-                    api.search(searchTypePrompt, pageSizePrompt, 'gender', 'female')
-                    .then(result => {
-                        print(result)
-                    })
-                }
-                else if(searchQueryTypePrompt === 'alive'){
-                    api.search(searchTypePrompt, pageSizePrompt, 'isAlive', 'true')
-                    .then(result => {
-                        print(result)
-                    })
-                }
-                else if(searchQueryTypePrompt === 'dead'){
-                    api.search(searchTypePrompt, pageSizePrompt, 'isAlive', 'false')
-                    .then(result => {
-                        print(result)
-                    })
-                }
-                else{
-                    queryPrompt().then((answers) => {
-                        const{queryPrompt = ''} = answers
-                        api.search(searchTypePrompt, pageSizePrompt, searchQueryTypePrompt, queryPrompt)
+                    // console.log(searchTypePrompt + ' ' + searchQueryTypePrompt)
+                    if(searchQueryTypePrompt === 'show all'){
+                        api.search(searchTypePrompt, pageSizePrompt)
                         .then(result => {
                             print(result)
                         })
-                    })
-                }
+                    }
+                    else if(searchQueryTypePrompt === 'male'){
+                        api.search(searchTypePrompt, pageSizePrompt, 'gender', 'male')
+                        .then(result => {
+                            print(result)
+                        })
+                    }
+                    else if(searchQueryTypePrompt === 'female'){
+                        api.search(searchTypePrompt, pageSizePrompt, 'gender', 'female')
+                        .then(result => {
+                            print(result)
+                        })
+                    }
+                    else if(searchQueryTypePrompt === 'alive'){
+                        api.search(searchTypePrompt, pageSizePrompt, 'isAlive', 'true')
+                        .then(result => {
+                            print(result)
+                        })
+                    }
+                    else if(searchQueryTypePrompt === 'dead'){
+                        api.search(searchTypePrompt, pageSizePrompt, 'isAlive', 'false')
+                        .then(result => {
+                            print(result)
+                        })
+                    }
+                    else{
+                        queryPrompt().then((answers) => {
+                            const{queryPrompt = ''} = answers
+                            api.search(searchTypePrompt, pageSizePrompt, searchQueryTypePrompt, queryPrompt)
+                            .then(result => {
+                                print(result)
+                            })
+                        })
+                    }
+                })
             })
         })
-    })
+    }
 }
 
 const print = (result) => {

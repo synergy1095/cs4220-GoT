@@ -8,7 +8,9 @@ const flags = yargs.usage('$0: Usage <cmd>')
         command: 'search',
         desc: 'search api by query',
         handler: (argv) => {
-            app.search()
+            let query = argv['_']
+            query.shift()
+            app.search(query)
         }
     })
     .demandCommand()
