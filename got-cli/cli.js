@@ -13,6 +13,13 @@ const flags = yargs.usage('$0: Usage <cmd>')
             app.search(query)
         }
     })
+    .command({
+        command: 'id',
+        desc: 'look up by id',
+        handler: (argv) => {
+            app.getByID()
+        }
+    })
     .demandCommand()
     .help('help')
     .argv

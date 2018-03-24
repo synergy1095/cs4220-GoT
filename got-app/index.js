@@ -18,8 +18,9 @@ exports.getByURL = (url) => {
         .catch(error => error.response.body)
 }
 
-exports.search = (type, pageSize = 10, queryType = null, query = null) => {
-    return _fetch(query ? type + '/?' + 'pageSize=' + pageSize + '&' + queryType + '=' + query : type + '/?' + 'pageSize=' + pageSize)
+exports.search = (type, page = 1, pageSize = 10, queryType = null, query = null) => {
+    return _fetch(query ? type + '?' + 'page=' + page + '&pageSize=' + pageSize + '&' + queryType + '=' + query 
+        : type + '?' + 'page=' + page + '&pageSize=' + pageSize)
 }
 
 exports.getQueryTypes = (type) => {

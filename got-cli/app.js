@@ -2,10 +2,28 @@ const
     api = require('got-app'),
     inquirer = require('inquirer')
 
+const getByID = () => {
+    searchPrompt()
+    .then((answers) => {
+        const{searchTypePrompt = 'characters'} = answers
+
+        idPrompt()
+        .then((answers) => {
+            const{idPrompt = 1} = answers
+
+            api.getByID(searchTypePrompt, idPrompt)
+            .then((result) => {
+                // console.log(result)
+                print(result)
+            })
+        })
+    })
+}
+
 const search = (query) => {
     if(query.length){
         query = query.join(' ')
-        api.search('characters', 10, 'name', query)
+        api.search('characters', 1, 10, 'name', query)
         .then(result => {
             print(result)
         })
@@ -22,42 +40,24 @@ const search = (query) => {
 
                     // console.log(searchTypePrompt + ' ' + searchQueryTypePrompt)
                     if(searchQueryTypePrompt === 'show all'){
-                        api.search(searchTypePrompt, pageSizePrompt)
-                        .then(result => {
-                            print(result)
-                        })
+                        pagePromptHandler(searchTypePrompt, 1, pageSizePrompt)
                     }
                     else if(searchQueryTypePrompt === 'male'){
-                        api.search(searchTypePrompt, pageSizePrompt, 'gender', 'male')
-                        .then(result => {
-                            print(result)
-                        })
+                        pagePromptHandler(searchTypePrompt, 1, pageSizePrompt, 'gender', 'male')
                     }
                     else if(searchQueryTypePrompt === 'female'){
-                        api.search(searchTypePrompt, pageSizePrompt, 'gender', 'female')
-                        .then(result => {
-                            print(result)
-                        })
+                        pagePromptHandler(searchTypePrompt, 1, pageSizePrompt, 'gender', 'female')
                     }
                     else if(searchQueryTypePrompt === 'alive'){
-                        api.search(searchTypePrompt, pageSizePrompt, 'isAlive', 'true')
-                        .then(result => {
-                            print(result)
-                        })
+                        pagePromptHandler(searchTypePrompt, 1, pageSizePrompt, 'isAlive', 'true')
                     }
                     else if(searchQueryTypePrompt === 'dead'){
-                        api.search(searchTypePrompt, pageSizePrompt, 'isAlive', 'false')
-                        .then(result => {
-                            print(result)
-                        })
+                        pagePromptHandler(searchTypePrompt, 1, pageSizePrompt, 'isAlive', 'false')
                     }
                     else{
                         queryPrompt().then((answers) => {
                             const{queryPrompt = ''} = answers
-                            api.search(searchTypePrompt, pageSizePrompt, searchQueryTypePrompt, queryPrompt)
-                            .then(result => {
-                                print(result)
-                            })
+                            pagePromptHandler(searchTypePrompt, 1, pageSizePrompt, searchQueryTypePrompt, queryPrompt)
                         })
                     }
                 })
@@ -67,29 +67,81 @@ const search = (query) => {
 }
 
 const print = (result) => {
-    console.log(result)
+    if(result.length){
+        result.forEach(function(element) {
+            for(key in element){
+                if(element[key].length === 0  || element[key][0] === '')
+                console.log(`${key} : None`)
+                else {
+                    console.log(`${key} : ${element[key]}`)
+                }
+            }
+            console.log(`------------------------------------------------------------------------\n`)
+        })
+    }
+    else if(result != ''){
+        for(key in result){
+            if(result[key].length === 0  || result[key][0] === '')
+            console.log(`${key} : None`)
+            else {
+                console.log(`${key} : ${result[key]}`)
+            }
+        }
+        console.log(`------------------------------------------------------------------------\n`)
+    }
+    else {
+        console.log(`There are no results to be shown.`)
+    }
 } 
 
-const books = () => {
-    let results = [] 
-    api.books()
-        .then(res => selectPrompt(res))
-        
-        // .then(result => {
-        //     console.log('-- CARDS --')
-        //     result.cards.forEach(card => {
-        //         console.log(`${card.value} of ${card.suit}`)
-        //     })
-
-        //     console.log('-- REMAING CARDS --')
-        //     console.log(result.remaining)
-        // })
-        .catch(err => console.log(err))
+const pagePrompt = () => {
+    return inquirer.prompt([{
+        type: 'list',
+        message: 'select a category to search',
+        name: 'pagePrompt',
+        choices: ['next', 'prev', 'exit']
+    }])
 }
 
-// const getTypes = () => {
-//     return api.getTypes()
-// }
+const pagePromptHandler = (searchType, page = 1, pageSize = 10, queryType = null, query = null, answers = null) => {
+    if(answers == null){
+        api.search(searchType, page, pageSize, queryType, query)
+        .then(result => {
+            print(result)
+            
+            pagePrompt()
+            .then(answers => {
+                pagePromptHandler(searchType, page, pageSize, queryType, query, answers)
+            })
+        })
+    }
+    else{
+        if(answers.pagePrompt === 'next'){
+            page = page+1
+            api.search(searchType, page, pageSize, queryType, query)
+            .then(result => {
+                print(result)
+                
+                pagePrompt()
+                .then(answers => {
+                    pagePromptHandler(searchType, page, pageSize, queryType, query, answers)
+                })
+            })
+        }
+        else if(answers.pagePrompt === 'prev'){
+            page = (page-1 <= 0) ? 1 : page-1
+            api.search(searchType, page, pageSize, queryType, query)
+            .then(result => {
+                print(result)
+                
+                pagePrompt()
+                .then(answers => {
+                    pagePromptHandler(searchType, page, pageSize, queryType, query, answers)
+                })
+            })
+        }
+    }
+}
 
 const searchPrompt = () => {
     let choices = api.getTypes()
@@ -140,6 +192,23 @@ const pageSizePrompt = () => {
     }])
 }
 
+const idPrompt = () => {
+    return inquirer.prompt([{
+        type: 'input',
+        name: 'idPrompt',
+        message: "Enter the ID: ",
+        validate: function(value) {
+            let pass = parseInt(value, 10)
+            if (!isNaN(pass)) {
+                return true;
+            }
+
+            return 'Please enter a valid number';
+        }
+    }])
+}
+
 module.exports = {
-    search
+    search,
+    getByID
 }
