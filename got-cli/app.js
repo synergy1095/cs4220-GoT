@@ -20,6 +20,22 @@ const getByID = () => {
     })
 }
 
+const idPrompt = () => {
+    return inquirer.prompt([{
+        type: 'input',
+        name: 'idPrompt',
+        message: "Enter the ID: ",
+        validate: function(value) {
+            let pass = parseInt(value, 10)
+            if (!isNaN(pass)) {
+                return true;
+            }
+
+            return 'Please enter a valid number';
+        }
+    }])
+}
+
 const search = (query) => {
     if(query.length){
         query = query.join(' ')
@@ -66,33 +82,54 @@ const search = (query) => {
     }
 }
 
-const print = (result) => {
-    if(result.length){
-        result.forEach(function(element) {
-            for(key in element){
-                if(element[key].length === 0  || element[key][0] === '')
-                console.log(`${key} : None`)
-                else {
-                    console.log(`${key} : ${element[key]}`)
-                }
-            }
-            console.log(`------------------------------------------------------------------------\n`)
-        })
-    }
-    else if(result != ''){
-        for(key in result){
-            if(result[key].length === 0  || result[key][0] === '')
-            console.log(`${key} : None`)
-            else {
-                console.log(`${key} : ${result[key]}`)
-            }
+const searchPrompt = () => {
+    let choices = api.getTypes()
+
+    return inquirer.prompt([{
+        type: 'list',
+        message: 'select a category to search',
+        name: 'searchTypePrompt',
+        choices: choices
+    }])
+}
+
+const queryTypePrompt = (type) => {
+    let choices = api.getQueryTypes(type)
+
+    return inquirer.prompt([{
+        type: 'list',
+        message: 'select a sub-category to search',
+        name: 'searchQueryTypePrompt',
+        choices: choices
+    }])
+}
+
+const queryPrompt = () => {
+    return inquirer.prompt([{
+        type: 'input',
+        name: 'queryPrompt',
+        message: "Enter your search query: ",
+        validate: function(value) {
+            return true
         }
-        console.log(`------------------------------------------------------------------------\n`)
-    }
-    else {
-        console.log(`There are no results to be shown.`)
-    }
-} 
+    }])
+}
+
+const pageSizePrompt = () => {
+    return inquirer.prompt([{
+        type: 'input',
+        name: 'pageSizePrompt',
+        message: "Enter the number of entries per page you want displayed: ",
+        validate: function(value) {
+            let pass = parseInt(value, 10)
+            if (!isNaN(pass)) {
+                return true;
+            }
+
+            return 'Please enter a valid number';
+        }
+    }])
+}
 
 const pagePrompt = () => {
     return inquirer.prompt([{
@@ -143,70 +180,33 @@ const pagePromptHandler = (searchType, page = 1, pageSize = 10, queryType = null
     }
 }
 
-const searchPrompt = () => {
-    let choices = api.getTypes()
-
-    return inquirer.prompt([{
-        type: 'list',
-        message: 'select a category to search',
-        name: 'searchTypePrompt',
-        choices: choices
-    }])
-}
-
-const queryTypePrompt = (type) => {
-    let choices = api.getQueryTypes(type)
-
-    return inquirer.prompt([{
-        type: 'list',
-        message: 'select a sub-category to search',
-        name: 'searchQueryTypePrompt',
-        choices: choices
-    }])
-}
-
-const queryPrompt = () => {
-    return inquirer.prompt([{
-        type: 'input',
-        name: 'queryPrompt',
-        message: "Enter your search query: ",
-        validate: function(value) {
-            return true
-        }
-    }])
-}
-
-const pageSizePrompt = () => {
-    return inquirer.prompt([{
-        type: 'input',
-        name: 'pageSizePrompt',
-        message: "Enter the number of entries you want displayed: ",
-        validate: function(value) {
-            let pass = parseInt(value, 10)
-            if (!isNaN(pass)) {
-                return true;
+const print = (result) => {
+    if(result.length){
+        result.forEach(function(element) {
+            for(key in element){
+                if(element[key].length === 0  || element[key][0] === '')
+                console.log(`${key} : None`)
+                else {
+                    console.log(`${key} : ${element[key]}`)
+                }
             }
-
-            return 'Please enter a valid number';
-        }
-    }])
-}
-
-const idPrompt = () => {
-    return inquirer.prompt([{
-        type: 'input',
-        name: 'idPrompt',
-        message: "Enter the ID: ",
-        validate: function(value) {
-            let pass = parseInt(value, 10)
-            if (!isNaN(pass)) {
-                return true;
+            console.log(`------------------------------------------------------------------------\n`)
+        })
+    }
+    else if(result != ''){
+        for(key in result){
+            if(result[key].length === 0  || result[key][0] === '')
+            console.log(`${key} : None`)
+            else {
+                console.log(`${key} : ${result[key]}`)
             }
-
-            return 'Please enter a valid number';
         }
-    }])
-}
+        console.log(`------------------------------------------------------------------------\n`)
+    }
+    else {
+        console.log(`There are no results to be shown.`)
+    }
+} 
 
 module.exports = {
     search,
