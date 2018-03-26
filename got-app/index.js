@@ -12,12 +12,6 @@ const _fetch = (command) => {
         .catch(error => error.response.body)
 }
 
-exports.getByURL = (url) => {
-    return superagent.get(url)
-        .then(response => response.body)
-        .catch(error => error.response.body)
-}
-
 exports.search = (type, page = 1, pageSize = 10, queryType = null, query = null) => {
     return _fetch(query ? `${type}?page=${page}&pageSize=${pageSize}&${queryType}=${query}` 
         : `${type}?page=${page}&pageSize=${pageSize}`)
