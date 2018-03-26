@@ -131,10 +131,10 @@ const pageSizePrompt = () => {
     }])
 }
 
-const pagePrompt = () => {
+const pagePrompt = (page) => {
     return inquirer.prompt([{
         type: 'list',
-        message: 'select a category to search',
+        message: `Current page: ${page}\nSelect Navigation Option:`,
         name: 'pagePrompt',
         choices: ['next', 'prev', 'exit']
     }])
@@ -146,7 +146,7 @@ const pagePromptHandler = (searchType, page = 1, pageSize = 10, queryType = null
         .then(result => {
             print(result)
             
-            pagePrompt()
+            pagePrompt(page)
             .then(answers => {
                 pagePromptHandler(searchType, page, pageSize, queryType, query, answers)
             })
@@ -159,7 +159,7 @@ const pagePromptHandler = (searchType, page = 1, pageSize = 10, queryType = null
             .then(result => {
                 print(result)
                 
-                pagePrompt()
+                pagePrompt(page)
                 .then(answers => {
                     pagePromptHandler(searchType, page, pageSize, queryType, query, answers)
                 })
@@ -171,7 +171,7 @@ const pagePromptHandler = (searchType, page = 1, pageSize = 10, queryType = null
             .then(result => {
                 print(result)
                 
-                pagePrompt()
+                pagePrompt(page)
                 .then(answers => {
                     pagePromptHandler(searchType, page, pageSize, queryType, query, answers)
                 })
